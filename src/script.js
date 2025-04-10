@@ -1,13 +1,15 @@
 function showTime(event) {
-  setInterval(() => {
-    let timezone = event.target.value;
-    let cityName = timezone.replace("_", "").split("/")[1];
-    let currentDate = moment().tz(timezone).format("MMMM Do Y");
-    let currentTime = moment()
-      .tz(timezone)
-      .format("h:mm:ss [<small>]A[</small>]");
-    let clocksElement = document.querySelector("#clocks");
-    clocksElement.innerHTML = `<div class="clocks mt-5">
+  let timezone = event.target.value;
+  if (timezone === "current") {
+    timezone = moment.tz.guess();
+  } 
+  let cityName = timezone.replace("_", " ").split("/")[1];
+  let currentDate = moment().tz(timezone).format("MMMM Do Y");
+  let currentTime = moment()
+    .tz(timezone)
+    .format("h:mm:ss [<small>]A[</small>]");
+  let clocksElement = document.querySelector("#clocks");
+  clocksElement.innerHTML = `<div class="clocks mt-5">
     <div class="row">
       <div class="col">
         <h2 class="city">${cityName}</h2>
@@ -18,7 +20,8 @@ function showTime(event) {
       </div>
     </div>
   </div>`;
-  }, 1000);
+
+  setInterval(showTime, 1000);
 }
 
 let cityElement = document.querySelector("#cities");
