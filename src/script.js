@@ -1,13 +1,22 @@
+let selectedTimezone = null;
+
 function showTime(event) {
-  let timezone = event.target.value;
-  if (timezone === "current") {
-    timezone = moment.tz.guess();
-  } 
-  let cityName = timezone.replace("_", " ").split("/")[1];
-  let currentDate = moment().tz(timezone).format("MMMM Do Y");
+  selectedTimezone = event.target.value;
+  if (selectedTimezone === "current") {
+    selectedTimezone = moment.tz.guess();
+  }
+  updateSelectedTime();
+}
+
+function updateSelectedTime() {
+  if (!selectedTimezone) return;
+
+  let cityName = selectedTimezone.replace("_", " ").split("/")[1];
+  let currentDate = moment().tz(selectedTimezone).format("MMMM Do Y");
   let currentTime = moment()
-    .tz(timezone)
+    .tz(selectedTimezone)
     .format("h:mm:ss [<small>]A[</small>]");
+
   let clocksElement = document.querySelector("#clocks");
   clocksElement.innerHTML = `<div class="clocks mt-5">
     <div class="row">
@@ -20,9 +29,9 @@ function showTime(event) {
       </div>
     </div>
   </div>`;
-
-  setInterval(showTime, 1000);
 }
+
+setInterval(updateSelectedTime, 1000);
 
 let cityElement = document.querySelector("#cities");
 cityElement.addEventListener("change", showTime);
